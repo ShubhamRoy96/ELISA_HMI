@@ -174,7 +174,7 @@ void Absorbance() {
   TLCD.setColor(VGA_BLUE);
   TLCD.setBackColor(VGA_WHITE);
   TLCD.print("(For Absorbance)", CENTER,50);
-  TLCD.fillRect(0,195,319,239);
+  
   TLCD.setBackColor(VGA_BLUE);
   TLCD.setColor(VGA_WHITE);
   TLCD.print("Absorbance = " ,10, 200);
@@ -182,10 +182,7 @@ void Absorbance() {
   TLCD.fillRect(230,200,300,220);
   TLCD.setColor(VGA_BLACK);
   TLCD.drawRect(230,200,300,220);
-  TLCD.setFont(SmallFont);
-  TLCD.setBackColor(VGA_BLUE);
-  TLCD.setColor(VGA_WHITE);
-  TLCD.print("<Home" ,10, 225);
+  drawHomeButton();
 
   
 }
@@ -195,30 +192,49 @@ void Transmittance() {
   TLCD.setColor(VGA_BLUE);
   TLCD.setBackColor(VGA_WHITE);
   TLCD.print("(For Transmittance)", CENTER,46);
-  TLCD.fillRect(0,195,319,239);
+  
   TLCD.setBackColor(VGA_BLUE);
   TLCD.setColor(VGA_WHITE);
   TLCD.print("Transmittance" ,10, 200);
   TLCD.print("=" ,220, 200);
   drawButtons();
-  TLCD.fillRect(235,200,300,220);
+  TLCD.fillRect(240,200,300,220);
   TLCD.setColor(VGA_BLACK);
-  TLCD.drawRect(235,200,300,220);
-  TLCD.setFont(SmallFont);
-  TLCD.setBackColor(VGA_BLUE);
-  TLCD.setColor(VGA_WHITE);
-  TLCD.print("<Home" ,10, 225);
+  TLCD.drawRect(240,200,300,220);
+  drawHomeButton();
   
 }
 
-
+void SourceControl() {
+  setSourceColor();
+  TLCD.fillScr(VGA_WHITE);
+  TLCD.setColor(VGA_BLUE);
+  TLCD.setBackColor(VGA_WHITE);
+  TLCD.print("LED Color:", 10, 61);
+  TLCD.print("R", 10, 105);
+  TLCD.print("G", 10, 145);
+  TLCD.print("B", 10, 185);
+  TLCD.fillRect(0, 220, 319, 239);
+  TLCD.fillRect(0, 0, 319, 40);
+  TLCD.setBackColor(VGA_BLUE);
+  TLCD.setColor(VGA_WHITE);
+  drawHomeButton();
+  TLCD.setFont(BigFont);
+  TLCD.print("RGB LED Control", CENTER, 10);
+  TLCD.setColor(VGA_RED);
+  TLCD.fillRect(0, 40, 319, 41); 
+  TLCD.setColor(VGA_BLACK);
+  TLCD.drawRect(30, 108, 310, 118); // R - Slider
+  TLCD.drawRect(30, 148, 310, 158);
+  TLCD.drawRect(30, 188, 310, 198);
+}
 
 void drawFrame(int x1, int y1, int x2, int y2) {
-  TLCD.setColor(255, 0, 0);
+  TLCD.setColor(VGA_RED);
   TLCD.drawRoundRect (x1, y1, x2, y2);
   while (Touch.dataAvailable())
     Touch.read();
-    TLCD.setColor(255, 255, 255);
+    TLCD.setColor(VGA_WHITE);
     TLCD.drawRoundRect (x1, y1, x2, y2);
 }
 
@@ -229,7 +245,7 @@ void drawButtons()
   {
     TLCD.setColor(16,167,103);
     TLCD.fillRoundRect (15+(x*60), 75, 65+(x*60), 125);
-    TLCD.setColor(255, 255, 255);
+    TLCD.setColor(VGA_WHITE);
     TLCD.drawRoundRect (15+(x*60), 75, 65+(x*60), 125);
     TLCD.setBackColor(16,167,103);
     TLCD.printNumI(x+1, 32+(x*60), 92);
@@ -239,7 +255,7 @@ void drawButtons()
   {
     TLCD.setColor(16,167,103);
     TLCD.fillRoundRect (15+(x*60), 135, 65+(x*60), 185);
-    TLCD.setColor(255, 255, 255);
+    TLCD.setColor(VGA_WHITE);
     TLCD.drawRoundRect (15+(x*60), 135, 65+(x*60), 185);
     TLCD.setBackColor(16,167,103);
     if (x<4)
@@ -259,31 +275,6 @@ void updateStr(unsigned int val) {
   TLCD.print("  ", 255 ,204);
 }
 
-void SourceControl() {
-  setSourceColor();
-  TLCD.fillScr(VGA_WHITE);
-  TLCD.setBackColor(VGA_BLUE);
-  TLCD.setColor(VGA_BLUE);
-  TLCD.fillRect(0, 220, 319, 239);
-  TLCD.fillRect(0, 0, 319, 40);
-  TLCD.setColor(VGA_WHITE);
-  TLCD.setFont(SmallFont);
-  TLCD.print("<Home" ,10, 225);
-  TLCD.setFont(BigFont);
-  TLCD.print("RGB LED Control", CENTER, 10);
-  TLCD.setColor(VGA_BLUE);
-  TLCD.setBackColor(VGA_WHITE);
-  TLCD.print("LED Color:", 10, 61);
-  TLCD.print("R", 10, 105);
-  TLCD.print("G", 10, 145);
-  TLCD.print("B", 10, 185);
-  TLCD.setColor(255, 0, 0);
-  TLCD.fillRect(0, 40, 319, 41); 
-  TLCD.setColor(VGA_BLACK);
-  TLCD.drawRect(30, 108, 310, 118); // R - Slider
-  TLCD.drawRect(30, 148, 310, 158);
-  TLCD.drawRect(30, 188, 310, 198);  
-  }
           
 void setSourceColor() {
   if (Touch.dataAvailable()) {
@@ -339,25 +330,18 @@ void setSourceColor() {
   
   // Draws the positioners
   TLCD.setColor(VGA_WHITE);
-  TLCD.fillRect(xR,109,(xR+4),117); // Positioner
+  TLCD.fillRect(xR,109,(xR+4),117);
+  TLCD.fillRect(xG,149,(xG+4),157);
+  TLCD.fillRect(xB,189,(xB+4),197);// Positioner
   TLCD.setColor(xRC, 0, 0);
   TLCD.fillRect(31, 109, (xR-1), 117);
-  TLCD.setColor(VGA_BLACK);
-  TLCD.fillRect((xR+5), 109, 309, 117);
-  
-  TLCD.setColor(VGA_WHITE);
-  TLCD.fillRect(xG,149,(xG+4),157);
   TLCD.setColor(0, xGC, 0);
   TLCD.fillRect(31, 149, (xG-1), 157);
-  TLCD.setColor(VGA_BLACK);
-  TLCD.fillRect((xG+5), 149, 309, 157);
-  
-
-  TLCD.setColor(VGA_WHITE);
-  TLCD.fillRect(xB,189,(xB+4),197);
   TLCD.setColor(0, 0, xBC);
   TLCD.fillRect(31, 189, (xB-1), 197);
   TLCD.setColor(VGA_BLACK);
+  TLCD.fillRect((xR+5), 109, 309, 117);
+  TLCD.fillRect((xG+5), 149, 309, 157);
   TLCD.fillRect((xB+5), 189, 309, 197);
 }
 
@@ -377,6 +361,7 @@ void Background()
   TLCD.setBackColor(VGA_BLUE);
   TLCD.setColor(VGA_BLUE);
   TLCD.fillRect(0, 0, 319,40);
+  TLCD.fillRect(0,195,319,239);
   TLCD.setColor(VGA_WHITE);
   TLCD.setFont(BigFont);
   TLCD.print("Select Well Number", CENTER,10);
@@ -384,3 +369,10 @@ void Background()
   TLCD.fillRect(0, 40, 319, 41);
 }
 
+void drawHomeButton()
+{  
+  TLCD.setFont(SmallFont);
+  TLCD.setBackColor(VGA_BLUE);
+  TLCD.setColor(VGA_WHITE);
+  TLCD.print("<Home" ,10, 225);
+}
